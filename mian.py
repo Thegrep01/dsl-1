@@ -16,11 +16,14 @@ def prep_string(str):
 
 
 def print_tree(root):
-    if root is None:
-        return
-    print_tree(root.left)
-    print(root.symbol)
-    print_tree(root.right)
+    a = "("
+    if root.left is not None:
+        a += print_tree(root.left)
+    a += " " + root.symbol + " "
+    if root.right is not None:
+        a += print_tree(root.right)
+    a += ')'
+    return a
 
 
 def get_token(token_list, expected):
@@ -44,8 +47,16 @@ def get_symbol(token_list):
         return Tree(x, None, None)
 
 
-def get_dot(token_list):
+def get_star(token_list):
     a = get_symbol(token_list)
+    if get_token(token_list, '*'):
+        return Tree('*', a)
+    else:
+        return a
+
+
+def get_dot(token_list):
+    a = get_star(token_list)
     if get_token(token_list, '.'):
         b = get_dot(token_list)  # this line changed
         return Tree('.', a, b)
@@ -64,9 +75,9 @@ def get_line(token_list):
         return a
 
 
-# tree = Tree('|', Tree('a'), Tree('.', Tree('b'), Tree('*', Tree('c'))))
-# print_tree(tree)
+tree = Tree('|', Tree('a'), Tree('.', Tree('b'), Tree('*', Tree('c'))))
+print(print_tree(tree))
 
-token_list = prep_string('a | ( ( b . c ) . a )')
+token_list = prep_string('a | ( ( b . c ) . a ) *')
 tree = get_line(token_list)
-print_tree(tree)
+print(print_tree(tree))
