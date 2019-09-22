@@ -9,8 +9,11 @@ G = ['a', 'b', 'c']
 tokens = ['|', '.', '(', ')', '*', 'end']
 
 
-def prep_string(str):
-    res = str.split()
+def prep_string(expression):
+    res = []
+    expression = expression.replace(' ', '')
+    for i in expression:
+        res.append(i)
     res.append('end')
     return res
 
@@ -36,8 +39,8 @@ def get_token(token_list, expected):
 
 def get_symbol(token_list):
     if get_token(token_list, '('):
-        x = get_line(token_list)  # get the subexpression
-        get_token(token_list, ')')  # remove the closing parenthesis
+        x = get_line(token_list)
+        get_token(token_list, ')')
         return x
     else:
         x = token_list[0]
@@ -78,6 +81,6 @@ def get_line(token_list):
 tree = Tree('|', Tree('a'), Tree('.', Tree('b'), Tree('*', Tree('c'))))
 print(print_tree(tree))
 
-token_list = prep_string('a | ( ( b . c ) . a ) *')
+token_list = prep_string('a|((b.c).a)*')
 tree = get_line(token_list)
 print(print_tree(tree))
